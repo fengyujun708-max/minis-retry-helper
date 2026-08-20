@@ -1,9 +1,7 @@
 name: Build APK
-
 on:
   push:
     branches: [ main ]
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,16 +12,12 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-version: '7.5'
-      - name: Build APK
+      - name: Build with Gradle
         run: |
           export ANDROID_HOME=/usr/local/lib/android/sdk
-          echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
-          # 使用gradle assembleDebug
-          gradle assembleDebug
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          chmod +x gradlew
+          ./gradlew assembleDebug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
