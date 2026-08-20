@@ -14,16 +14,16 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Setup Android SDK
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: '7.5'
+      - name: Build APK
         run: |
           export ANDROID_HOME=/usr/local/lib/android/sdk
           echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
-          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
-          echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-30" "build-tools;30.0.3"
-      - name: Build with Gradle
-        run: chmod +x gradlew && ./gradlew assembleDebug
+          # 使用gradle assembleDebug
+          gradle assembleDebug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
